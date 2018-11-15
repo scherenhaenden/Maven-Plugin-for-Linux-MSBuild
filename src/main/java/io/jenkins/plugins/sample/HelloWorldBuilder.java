@@ -4,6 +4,7 @@ import hudson.Launcher;
 import hudson.Extension;
 import hudson.FilePath;
 import hudson.util.FormValidation;
+import io.jenkins.plugins.plugincore.tools.console.statesnotes.MsBuildErrorNote;
 import hudson.model.AbstractProject;
 import hudson.model.Run;
 import hudson.model.TaskListener;
@@ -17,6 +18,8 @@ import java.io.IOException;
 import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
 import org.kohsuke.stapler.DataBoundSetter;
+
+
 
 public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
 
@@ -48,6 +51,14 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
         } else {
             listener.getLogger().println("Hello, " + name + "!");
         }
+        test();
+    }
+
+
+
+    public void test(){
+        //MsBuildErrorNote g = new MsBuildErrorNote();
+
     }
 
     @Symbol("greet")
