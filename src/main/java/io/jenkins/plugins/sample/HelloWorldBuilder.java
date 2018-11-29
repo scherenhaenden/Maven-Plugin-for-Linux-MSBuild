@@ -1,11 +1,18 @@
 package io.jenkins.plugins.sample;
 
 import hudson.Launcher;
+import hudson.EnvVars;
 import hudson.Extension;
 import hudson.FilePath;
+import hudson.util.ArgumentListBuilder;
 import hudson.util.FormValidation;
 import io.jenkins.plugins.plugincore.tools.console.statesnotes.MsBuildErrorNote;
+import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
+import hudson.model.BuildListener;
+import hudson.model.Computer;
+import hudson.model.Node;
+import hudson.model.Result;
 import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.Builder;
@@ -14,6 +21,8 @@ import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
 import javax.servlet.ServletException;
+
+import java.io.File;
 import java.io.IOException;
 import jenkins.tasks.SimpleBuildStep;
 import org.jenkinsci.Symbol;
@@ -58,7 +67,10 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
 
 
     @Override
+    //public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
+       
+       // only for tests
         if (launcher.isUnix()) {
             listener.getLogger().println("It is Unix");
         } else {
@@ -66,6 +78,46 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
         }
 
         String execName = detectionOS(launcher);
+        ArgumentListBuilder args = new ArgumentListBuilder();
+
+        EnvVars env = run.getEnvironment(listener);
+        Node node = Computer.currentComputer().getNode();
+
+        MsBuildConsoleParser mbcp = new MsBuildConsoleParser(listener.getLogger(), run.getCharset(),listener);
+        MSBuildConsoleAnnotator annotator = new MSBuildConsoleAnnotator(listener.getLogger(), run.getCharset());
+        
+        FilePath file = run.getExecutor().getCurrentWorkspace();
+        //FilePath pwd = file;
+        mbcp.getNumberOfErrors();
+
+       
+
+
+        //int i= launcher.launch().cmdAsSingleString(execName).envs(env).stdout(mbcp).stdout(annotator).join();
+        listener.getLogger().println("pwd");
+
+        launcher.launch().cmdAsSingleString("pwd").envs(env).stdout(mbcp).stdout(annotator).pwd(file).join();
+
+        launcher.launch().cmdAsSingleString(execName).envs(env).stdout(mbcp).stdout(annotator).pwd(file).join();
+
+        
+
+        
+        
+        listener.getLogger().println("It is Done, line added");
+
+        //launcher.launch().cmds(args).envs(env).stdout(mbcp).stdout(annotator).pwd(file).join();
+
+        
+
+        
+
+        //args.prepend("ls"," ./");
+
+
+
+
+        //launcher.launch();
 
 
 
@@ -75,6 +127,7 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Hello, " + name + "!");
         }
         test();
+        //return true;
     }
 
 
