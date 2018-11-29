@@ -44,8 +44,31 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
         this.useFrench = useFrench;
     }
 
+    private String detectionOS(Launcher launcher){
+        if(launcher.isUnix()){
+
+            return "msbuild";
+
+        }
+        
+        return  "msbuild.exe";
+
+
+    }
+
+
     @Override
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
+        if (launcher.isUnix()) {
+            listener.getLogger().println("It is Unix");
+        } else {
+            listener.getLogger().println("Is not Unix");
+        }
+
+        String execName = detectionOS(launcher);
+
+
+
         if (useFrench) {
             listener.getLogger().println("Bonjour, " + name + "!");
         } else {
