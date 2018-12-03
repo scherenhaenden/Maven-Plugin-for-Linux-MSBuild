@@ -90,13 +90,32 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
 
         launcher.launch().cmdAsSingleString("pwd").envs(env).stdout(mbcp).stdout(annotator).pwd(file).join();
 
-        launcher.launch().cmdAsSingleString(execName).envs(env).stdout(mbcp).stdout(annotator).pwd(file).join();
+
+
+        
+        try
+        {
+            launcher.launch().cmdAsSingleString(execName).envs(env).stdout(mbcp).stdout(annotator).pwd(file).join();
+
+            if (mbcp.getNumberOfWarnings() > 0) {
+                listener.getLogger().println("> built with warnings. ");
+                run.setResult(Result.UNSTABLE);
+            }
+
+
+        }
+        catch(Exception ex)
+        {
+            //Util.displayIOException(e, listener);
+            run.setResult(Result.FAILURE);
+
+        }
 
         
 
         
         
-        listener.getLogger().println("It is Done, line added");
+        listener.getLogger().println("MSbuild is done");
 
         //launcher.launch().cmds(args).envs(env).stdout(mbcp).stdout(annotator).pwd(file).join();
 
