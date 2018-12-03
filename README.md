@@ -1,10 +1,9 @@
 ﻿# MSBuild Plugin for Linux 
 <br>
 
-I write in .Net Framework the most of my applications and also my websites. So I needed CI/CD  but Jenkins did not have a plugin for this Task. I took the Plugin used for windows and I changed a bit. 
+I write in .Net Framework the most of my applications and also my websites for that reason I needed CI/CD functions but Jenkins did not have a plugin for this Task. I took the Plugin used for windows and I changed a bit. 
 
-It builds for now, but I have still a bit to do.
-
+The plugin can build Applications for .Netframework on linux but only those that relie on part of the framework that can be use on linux. Not tested Enough yet and not Tested for WPF or UI things that work only in windows because those things would not work. 
 
 
 ## Installation
