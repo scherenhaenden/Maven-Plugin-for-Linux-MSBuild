@@ -6,6 +6,7 @@ import hudson.Extension;
 import hudson.FilePath;
 import hudson.util.ArgumentListBuilder;
 import hudson.util.FormValidation;
+import io.jenkins.plugins.plugincore.tools.OSdetection.MSBuildNameByOsDetection;
 import io.jenkins.plugins.plugincore.tools.console.statesnotes.MsBuildErrorNote;
 import hudson.model.AbstractBuild;
 import hudson.model.AbstractProject;
@@ -52,23 +53,14 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
     public void setUseFrench(boolean useFrench) {
         this.useFrench = useFrench;
     }
-
-    private String detectionOS(Launcher launcher){
-        if(launcher.isUnix()){
-
-            return "msbuild";
-
-        }
-        
-        return  "msbuild.exe";
-
-
-    }
+    
 
 
     @Override
     //public boolean perform(AbstractBuild<?, ?> build, Launcher launcher, BuildListener listener) throws InterruptedException, IOException {
     public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener) throws InterruptedException, IOException {
+       
+        String execName =  new MSBuildNameByOsDetection(launcher).getMSBuildName();
        
        // only for tests
         if (launcher.isUnix()) {
@@ -77,7 +69,7 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Is not Unix");
         }
 
-        String execName = detectionOS(launcher);
+        
         ArgumentListBuilder args = new ArgumentListBuilder();
 
         EnvVars env = run.getEnvironment(listener);
