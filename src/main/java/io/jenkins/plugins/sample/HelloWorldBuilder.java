@@ -81,10 +81,6 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
         FilePath file = run.getExecutor().getCurrentWorkspace();
         //FilePath pwd = file;
         mbcp.getNumberOfErrors();
-
-       
-
-
         //int i= launcher.launch().cmdAsSingleString(execName).envs(env).stdout(mbcp).stdout(annotator).join();
         listener.getLogger().println("pwd");
 
@@ -96,13 +92,20 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
         try
         {
             launcher.launch().cmdAsSingleString(execName).envs(env).stdout(mbcp).stdout(annotator).pwd(file).join();
+            int numberOfWarnings = mbcp.getNumberOfWarnings();
+            int numberOfErrors = mbcp.getNumberOfErrors();
 
-            if (mbcp.getNumberOfWarnings() > 0) {
+            if (numberOfErrors > 0) {
+                listener.getLogger().println("> The Application could not be built ");
+                listener.getLogger().println("> Number of Warnings: "+ numberOfWarnings);
+                listener.getLogger().println("> Number of Errors: "+ numberOfErrors);
+                run.setResult(Result.FAILURE);
+            }    
+            else if (numberOfWarnings > 0) {
                 listener.getLogger().println("> built with warnings. ");
+                listener.getLogger().println("> Number of Warnings: "+ numberOfWarnings);
                 run.setResult(Result.UNSTABLE);
             }
-
-
         }
         catch(Exception ex)
         {
@@ -110,43 +113,19 @@ public class HelloWorldBuilder extends Builder implements SimpleBuildStep {
             run.setResult(Result.FAILURE);
 
         }
-
-        
-
         
         
-        listener.getLogger().println("MSbuild is done");
-
-        //launcher.launch().cmds(args).envs(env).stdout(mbcp).stdout(annotator).pwd(file).join();
-
-        
-
-        
-
-        //args.prepend("ls"," ./");
-
-
-
-
-        //launcher.launch();
-
-
+        listener.getLogger().println("MSbuild is done");      
 
         if (useFrench) {
             listener.getLogger().println("Bonjour, " + name + "!");
         } else {
             listener.getLogger().println("Hello, " + name + "!");
         }
-        test();
+        
         //return true;
     }
-
-
-
-    public void test(){
-        //MsBuildErrorNote g = new MsBuildErrorNote();
-
-    }
+  
 
     @Symbol("greet")
     @Extension
